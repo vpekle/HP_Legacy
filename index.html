@@ -1,108 +1,66 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Колесо Судьбы</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Marck+Script&family=Great+Vibes&display=swap&subset=cyrillic" rel="stylesheet">
   <style>
     body {
-      font-family: 'Cormorant Garamond', serif;
-      background: url('https://www.transparenttextures.com/patterns/paper-fibers.png'), linear-gradient(135deg, #1d1b1a, #2e2a26);
-      background-size: cover;
-      color: #e0d6c8;
-      margin: 0;
+      font-family: 'Georgia', serif;
+      background-color: #1e1e1e;
+      color: #f0e6d2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 2rem;
-      text-align: center;
-      cursor: url('https://cur.cursors-4u.net/holidays/hol-2/hol166.cur'), auto;
     }
-
     input, button {
       padding: 0.5rem;
       font-size: 1rem;
     }
-
     #characterName {
       margin-top: 1rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #c1a96e;
-      text-shadow: 0 0 10px #c1a96e;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow: 0 0 10px #ffd700;
     }
-
     #result {
       margin-top: 2rem;
       font-size: 1.5rem;
       font-weight: bold;
       animation: glow 1.5s ease-in-out infinite alternate;
     }
-
     @keyframes glow {
       from {
-        text-shadow: 0 0 5px #c1a96e, 0 0 10px #a98c55;
+        text-shadow: 0 0 5px #ffdd33, 0 0 10px #ffdd33, 0 0 15px #ff8800;
       }
       to {
-        text-shadow: 0 0 15px #f7e3b1;
+        text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffaa00, 0 0 30px #ff6600;
       }
     }
-
     canvas {
-      width: 60vw;
-      height: 60vw;
-      max-width: 500px;
-      max-height: 500px;
-      background: #1d1b1a;
+      background: #f0e6d2;
       border-radius: 50%;
-      border: 4px double #c1a96e;
-      margin-top: 1rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      transition: box-shadow 0.3s ease-in-out;
     }
-
     canvas.glow {
-      box-shadow: 0 0 20px #c1a96e, 0 0 30px #a98c55;
-    }
-
-    #spinBtn {
-      margin: 1rem auto;
-      font-family: 'Great Vibes', cursive;
-      font-size: 1.7rem;
-      background-color: #c1a96e;
-      color: #1d1b1a;
-      border: 3px double #a98c55;
-      border-radius: 12px;
-      padding: 0.7rem 1.5rem;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-      box-shadow: 0 0 12px #c1a96e;
-      display: block;
-    }
-
-    #spinBtn:hover {
-      background-color: #a98c55;
-      color: #f7e3b1;
-      box-shadow: 0 0 15px #f7e3b1;
-    }
-
-    .fade-in {
-      opacity: 0;
-      animation: fadeIn 1s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      to { opacity: 1; }
+      box-shadow: 0 0 20px #ffd700, 0 0 30px #ffa500;
     }
   </style>
 </head>
 <body>
-  <h1 class="fade-in">Колесо Судьбы</h1>
-  <p class="fade-in">Введите код персонажа, чтобы запустить судьбоносный выбор:</p>
+  <h1>Колесо Судьбы</h1>
+  <p>Введите код персонажа, чтобы запустить судьбоносный выбор:</p>
   <input type="text" id="codeInput" placeholder="Введите код" />
   <button onclick="loadWheel()">Подтвердить</button>
 
-  <div id="characterName" class="fade-in"></div>
+  <div id="characterName"></div>
 
-  <div id="wheelContainer" class="fade-in" style="display:none;">
-    <canvas id="canvas" width="500" height="500"></canvas><br />
-    <button id="spinBtn" onclick="spinWheel()">Крутить колесо</button>
+  <div id="wheelContainer" style="display:none;">
+    <canvas id="canvas" width="400" height="400"></canvas><br />
+    <button onclick="spinWheel()">Крутить колесо</button>
     <div id="result"></div>
   </div>
 
@@ -154,7 +112,7 @@
       const ctx = canvas.getContext('2d');
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const radius = 240;
+      const radius = 180;
       const sliceAngle = (2 * Math.PI) / options.length;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -167,10 +125,10 @@
         ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, radius, startAngle, endAngle);
         ctx.closePath();
-        ctx.fillStyle = '#a98c55';
+        ctx.fillStyle = i % 2 === 0 ? '#8c7853' : '#d2b48c';
         ctx.fill();
 
-        ctx.strokeStyle = '#1d1b1a';
+        ctx.strokeStyle = '#000';
         ctx.lineWidth = 2;
         ctx.stroke();
 
@@ -178,9 +136,9 @@
         ctx.translate(centerX, centerY);
         ctx.rotate(startAngle + sliceAngle / 2);
         ctx.textAlign = "right";
-        ctx.fillStyle = '#1d1b1a';
-        ctx.font = 'bold 14px Cormorant Garamond';
-        wrapText(ctx, options[i], radius - 10, 0, 100, 14);
+        ctx.fillStyle = '#000';
+        ctx.font = 'bold 12px Georgia';
+        wrapText(ctx, options[i], radius - 10, 0, 90, 12);
         ctx.restore();
       }
     }
@@ -214,6 +172,7 @@
 
     function animateSpin() {
       const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
       angle += rotationSpeed;
       rotationSpeed -= deceleration;
 
@@ -225,7 +184,7 @@
         const normalizedAngle = angle % (2 * Math.PI);
         const selected = options[Math.floor((options.length - normalizedAngle / sliceAngle) % options.length)];
         document.getElementById('result').textContent = `Выпало: ${selected}`;
-        document.querySelector("#spinBtn").disabled = true;
+        document.querySelector("#wheelContainer button").disabled = true;
         return;
       }
 
