@@ -1,66 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Колесо Судьбы</title>
+  <link href="https://fonts.googleapis.com/css2?family=Helvetica&display=swap&subset=cyrillic" rel="stylesheet">
   <style>
     body {
-      font-family: 'Georgia', serif;
-      background-color: #1e1e1e;
-      color: #f0e6d2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-family: 'Helvetica', sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+      margin: 0;
       padding: 2rem;
+      text-align: center;
+      cursor: default;
     }
+
     input, button {
       padding: 0.5rem;
       font-size: 1rem;
+      margin: 0.5rem;
+      border: 1px solid #444;
+      background-color: #eee;
+      color: #000;
     }
+
     #characterName {
       margin-top: 1rem;
       font-size: 1.2rem;
       font-weight: bold;
-      color: #ffd700;
-      text-shadow: 0 0 10px #ffd700;
+      color: #444;
     }
+
     #result {
       margin-top: 2rem;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: bold;
-      animation: glow 1.5s ease-in-out infinite alternate;
+      color: #222;
     }
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 5px #ffdd33, 0 0 10px #ffdd33, 0 0 15px #ff8800;
-      }
-      to {
-        text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffaa00, 0 0 30px #ff6600;
-      }
-    }
+
     canvas {
-      background: #f0e6d2;
+      width: 60vw;
+      height: 60vw;
+      max-width: 500px;
+      max-height: 500px;
+      background: #f5f5f5;
       border-radius: 50%;
-      box-shadow: 0 0 15px rgba(0,0,0,0.4);
-      transition: box-shadow 0.3s ease-in-out;
+      border: 2px solid #ccc;
+      margin-top: 1rem;
     }
-    canvas.glow {
-      box-shadow: 0 0 20px #ffd700, 0 0 30px #ffa500;
+
+    #spinBtn {
+      font-family: 'Helvetica', sans-serif;
+      font-size: 1.2rem;
+      background-color: #ddd;
+      color: #000;
+      border: 2px solid #888;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    #spinBtn:hover {
+      background-color: #ccc;
     }
   </style>
 </head>
 <body>
   <h1>Колесо Судьбы</h1>
-  <p>Введите код персонажа, чтобы запустить судьбоносный выбор:</p>
+  <p>Введите код персонажа:</p>
   <input type="text" id="codeInput" placeholder="Введите код" />
   <button onclick="loadWheel()">Подтвердить</button>
 
   <div id="characterName"></div>
 
   <div id="wheelContainer" style="display:none;">
-    <canvas id="canvas" width="400" height="400"></canvas><br />
-    <button onclick="spinWheel()">Крутить колесо</button>
+    <canvas id="canvas" width="500" height="500"></canvas><br />
+    <button id="spinBtn" onclick="spinWheel()">Крутить колесо</button>
     <div id="result"></div>
   </div>
 
@@ -112,7 +128,7 @@
       const ctx = canvas.getContext('2d');
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const radius = 180;
+      const radius = 240;
       const sliceAngle = (2 * Math.PI) / options.length;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -125,10 +141,10 @@
         ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, radius, startAngle, endAngle);
         ctx.closePath();
-        ctx.fillStyle = i % 2 === 0 ? '#8c7853' : '#d2b48c';
+        ctx.fillStyle = i % 2 === 0 ? '#dddddd' : '#bbbbbb';
         ctx.fill();
 
-        ctx.strokeStyle = '#000';
+        ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
         ctx.stroke();
 
@@ -136,9 +152,9 @@
         ctx.translate(centerX, centerY);
         ctx.rotate(startAngle + sliceAngle / 2);
         ctx.textAlign = "right";
-        ctx.fillStyle = '#000';
-        ctx.font = 'bold 12px Georgia';
-        wrapText(ctx, options[i], radius - 10, 0, 90, 12);
+        ctx.fillStyle = '#000000';
+        ctx.font = 'bold 18px Helvetica';
+        wrapText(ctx, options[i], radius - 10, 0, 100, 18);
         ctx.restore();
       }
     }
@@ -166,25 +182,22 @@
       spinning = true;
       rotationSpeed = Math.random() * 0.2 + 0.25;
       deceleration = 0.005;
-      document.getElementById('canvas').classList.add('glow');
       animateSpin();
     }
 
     function animateSpin() {
       const canvas = document.getElementById('canvas');
-      const ctx = canvas.getContext('2d');
       angle += rotationSpeed;
       rotationSpeed -= deceleration;
 
       if (rotationSpeed <= 0) {
         rotationSpeed = 0;
         spinning = false;
-        canvas.classList.remove('glow');
         const sliceAngle = (2 * Math.PI) / options.length;
         const normalizedAngle = angle % (2 * Math.PI);
         const selected = options[Math.floor((options.length - normalizedAngle / sliceAngle) % options.length)];
         document.getElementById('result').textContent = `Выпало: ${selected}`;
-        document.querySelector("#wheelContainer button").disabled = true;
+        document.querySelector("#spinBtn").disabled = true;
         return;
       }
 
